@@ -5,11 +5,13 @@ import * as actions from '../actions';
 import Landing from './Landing';
 import Header from './Header';
 import Dashboard from './Dashboard';
+import AddBudgetItemView from './BudgetMonth/AddBudgetItemView';
 import '../stylesheets/main.css';
 
 class App extends Component {
     componentDidMount() {
         this.props.fetchUser();
+        this.props.fetchCurrentMonth();
     }
 
     render() {
@@ -20,6 +22,7 @@ class App extends Component {
                         <Header />
                         <Route exact path='/' component={Landing} />
                         <Route exact path='/dashboard' component={Dashboard} />
+                        <Route exact path='/add-item' component={AddBudgetItemView} />
                     </div>
                 </BrowserRouter>
             </div>

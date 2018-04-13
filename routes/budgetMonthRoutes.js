@@ -19,20 +19,20 @@ module.exports = (app) => {
         res.send(budgetMonth);
     });
 
-    app.post('/api/budget_months', requireLogin, async (req, res) => {
-        const { month, year, limit } = req.body;
+    app.post('/api/budget_months/create', requireLogin, async (req, res) => {
+        const { month, year, limit, budgetItems } = req.body;
 
         const existingBudgetMonth = await BudgetMonth.findOne({ 
             _user: req.user.id,
             month: month,
-            year: year 
+            year: year
         })
 
         if(existingBudgetMonth) {
             return res.send(existingBudgetMonth);
         }
 
-        var data = { month, year, _user: req.user.id };
+        var data = { month, year, _user: req.user.id, budgetItems: budgetItems };
 
         if(limit > 0) {
             data.limit = limit;
@@ -40,6 +40,48 @@ module.exports = (app) => {
         
         var budgetMonth = new BudgetMonth(data);
 
+        budgetMonth = await budgetMonth.save();
+        res.send(budgetMonth);
+    });
+
+    app.post('/api/budget_months/update_limit', requireLogin, async (req, res) => {
+        const { month, year, limit } = req.body;
+
+        var budgetMonth = await BudgetMonth.findOne({
+            _user: req.user.id,
+            month: month,
+            year: year
+        });
+
+        if(!budgetMonth) {
+            return res.status(422).send('Budget Month Not Found');
+        }
+
+        budgetMonth.limit = limit;
+        budgetMonth = await budgetMonth.save();
+        res.send(budgetMonth);
+    });
+
+    app.post('/api/budget_months/add_budget_item', requireLogin, async (req, res) => {
+        const { month, year, budgetItem } = req.body;
+
+        var budgetMonth = await BudgetMonth.findOne({
+            _user: req.user.id,
+            month: month,
+            year: year
+        });
+
+        if(!budgetMonth) {
+            return res.status(422).send('Budget Month Not Found');
+        }
+
+        const { name, category, amount } = budgetItem;
+
+        budgetMonth.budgetItems.push({
+            name,
+            category,
+            amount
+        });
         budgetMonth = await budgetMonth.save();
         res.send(budgetMonth);
     });

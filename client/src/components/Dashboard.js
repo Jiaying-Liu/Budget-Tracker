@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchCurrentMonth, setBudgetMonth } from '../actions/index';
+import { fetchCurrentMonth, createBudgetMonth } from '../actions/index';
 import { 
     Button,
-    ProgressBar
+    ProgressBar,
+    ListGroup,
+    ListGroupItem
 } from 'react-bootstrap';
-import { monthParser } from '../helpers/budgetMonthHelper';
 import '../stylesheets/components/Dashboard.css';
+import BudgetMonthView from './BudgetMonth/BudgetMonthView';
 
 class Dashboard extends Component {
     componentDidMount() {
@@ -18,43 +20,11 @@ class Dashboard extends Component {
         var d = new Date();
         var month = d.getMonth();
         var year = d.getFullYear();
-        this.props.setBudgetMonth({
+        this.props.createBudgetMonth({
             month,
             year,
             limit: this.props.auth.defaultBudget
         });
-    }
-
-    renderProgressBar() {
-        var spentSoFar = this.props.currentMonth.budgetItems.reduce(
-            (acc, curr) => acc + curr.amount , 
-            0
-        );
-        var percent = (spentSoFar / this.props.currentMonth.limit) * 100;
-
-        return (
-            <ProgressBar
-                now={spentSoFar}
-                max={this.props.currentMonth.limit}
-                label={`${percent}%`}
-                bsClass='budget-tracker-progress-bar' />
-        )
-    }
-
-    renderBudgetItemList() {
-        if(this.props.currentMonth.budgetItems.length === 0) {
-            return <div>Add a budget item!</div>;
-        }
-    }
-
-    renderAddButton() {
-        return (
-            <Button
-                bsStyle='primary'
-                onClick={() => {}}>
-                Add Budget Item
-            </Button>
-        )
     }
 
     renderContent() {
@@ -70,11 +40,8 @@ class Dashboard extends Component {
         else {
             return (
                 <div className='dashboard-content' style={{ width: '100%' }}>
-                    <div>Month: {monthParser(this.props.currentMonth.month)}</div>
-                    <div>Budget: ${this.props.currentMonth.limit}</div>
-                    {this.renderProgressBar()}
-                    {this.renderBudgetItemList()}
-                    {this.renderAddButton()}
+                    <BudgetMonthView
+                        currentMonth={this.props.currentMonth} />
                 </div>
             );
         }
@@ -95,7 +62,7 @@ function mapStateToProps({ currentMonth, auth }) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ 
-        setBudgetMonth: setBudgetMonth,
+        createBudgetMonth: createBudgetMonth,
         fetchCurrentMonth: fetchCurrentMonth
     }, dispatch);
 }

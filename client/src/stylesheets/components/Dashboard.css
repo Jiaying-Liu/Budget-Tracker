@@ -2,13 +2,3 @@
     display: flex;
     justify-content: center;
 }
-
-.budget-tracker-dashboard .progress {
-    width: 80%;
-}
-
-.budget-tracker-dashboard .dashboard-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}

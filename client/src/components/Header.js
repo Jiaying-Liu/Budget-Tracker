@@ -30,7 +30,7 @@ class Header extends Component {
                 );
             default:
                 return [
-                    <Nav>
+                    <Nav key='1'>
                     <NavDropdown className='header-dropdown' title="Options" id="header-dropdown">
                         <LinkContainer to='/dashboard'>
                             <MenuItem>
@@ -54,7 +54,7 @@ class Header extends Component {
                         </LinkContainer>
                     </NavDropdown>
                     </Nav>,
-                    <Nav 
+                    <Nav key='2'
                         pullRight
                         style={{ paddingRight: '30px' }} >
                     <NavItem href='/api/logout'>Logout</NavItem>
