@@ -7,18 +7,12 @@ import {
     Table
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { removeBudgetItem } from '../../actions/index';
 import { monthParser } from '../../helpers/budgetMonthHelper';
 import '../../stylesheets/components/BudgetMonth/BudgetMonthView.css';
 
 class BudgetMonthView extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isAddBudgetItem: false
-        }
-    }
-
     static propTypes = {
         match: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
@@ -49,6 +43,21 @@ class BudgetMonthView extends Component {
         )
     }
 
+    deleteIconClick(index) {
+        this.props.removeBudgetItem({
+            month: this.props.currentMonth.month,
+            year: this.props.currentMonth.year,
+            indexToRemove: index
+        });
+    }
+
+    editIconClick(index) {
+        const { month, year } = this.props.currentMonth;
+        let pathStr = `/edit-item/${month}/${year}/${index}`
+        this.props.history.push(pathStr);
+        this.props.history.goForward();
+    }
+
     getTableContents() {
         return this.props.currentMonth.budgetItems.map((budgetItem, index) => {
             return (
@@ -56,6 +65,23 @@ class BudgetMonthView extends Component {
                     <td>{budgetItem.name}</td>
                     <td>{budgetItem.category}</td>
                     <td>{budgetItem.amount}</td>
+                    <td>
+                        <div 
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'flex-end'
+                            }}>
+                            <i
+                                style={{ paddingRight: '16px' }}
+                                title='Edit'
+                                onClick={this.editIconClick.bind(this, index)} 
+                                className='fa fa-edit' />
+                            <i 
+                                title='Delete'
+                                className='fa fa-trash'
+                                onClick={this.deleteIconClick.bind(this, index)} />
+                        </div>
+                    </td>
                 </tr>
             );
         });
@@ -72,6 +98,7 @@ class BudgetMonthView extends Component {
                             <th>Name</th>
                             <th>Category</th>
                             <th>Amount</th>
+                            <th style={{width: '10%'}}>Edit/Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,18 +122,10 @@ class BudgetMonthView extends Component {
         )
     }
 
-    renderContent() {
-        if(this.state.isAddBudgetItem) {
-            return 
-        } else {
-
-        }
-    }
-
     render() {
         return (
             <div className='budget-month-view'>
-                <div>Month: {monthParser(this.props.currentMonth.month)}</div>
+                <div>Month: {monthParser(this.props.currentMonth.month)} {this.props.currentMonth.year}</div>
                 <div>Budget: ${this.props.currentMonth.limit}</div>
                 {this.renderProgressBar()}
                 {this.renderBudgetItemTable()}
@@ -116,5 +135,11 @@ class BudgetMonthView extends Component {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({ 
+        removeBudgetItem: removeBudgetItem
+    }, dispatch);
+}
+
 const BudgetMonthViewRouter = withRouter(BudgetMonthView);
-export default BudgetMonthViewRouter;
+export default connect(null, mapDispatchToProps)(BudgetMonthViewRouter);

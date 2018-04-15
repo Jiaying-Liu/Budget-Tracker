@@ -1,5 +1,6 @@
 import React from 'react';
 
+// refactor this to link to dashboard if user is logged in
 const Landing = () => {
   return (
     <div style={{ textAlign: 'center' }}>

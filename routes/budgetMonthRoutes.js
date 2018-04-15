@@ -85,4 +85,41 @@ module.exports = (app) => {
         budgetMonth = await budgetMonth.save();
         res.send(budgetMonth);
     });
+
+    app.post('/api/budget_months/save_budget_item', requireLogin, async (req, res) => {
+        const { month, year, budgetItem, index } = req.body;
+
+        var budgetMonth = await BudgetMonth.findOne({
+            _user: req.user.id,
+            month: month,
+            year: year
+        });
+
+        if(!budgetMonth) {
+            return res.status(422).send('Budget Month Not Found');
+        }
+
+        const { name, category, amount } = budgetItem;
+        budgetMonth.budgetItems[index] = { name, category, amount };
+        budgetMonth = await budgetMonth.save();
+        res.send(budgetMonth);
+    });
+
+    app.post('/api/budget_months/remove_budget_item', requireLogin, async (req, res) => {
+        const { month, year, indexToRemove } = req.body;
+
+        var budgetMonth = await BudgetMonth.findOne({
+            _user: req.user.id,
+            month: month,
+            year: year
+        });
+
+        if(!budgetMonth) {
+            return res.status(422).send('Budget Month Not Found');
+        }
+
+        budgetMonth.budgetItems.splice(indexToRemove, 1);
+        budgetMonth = await budgetMonth.save();
+        res.send(budgetMonth);
+    });
 }

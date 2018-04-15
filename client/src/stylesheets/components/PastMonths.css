@@ -1,0 +1,15 @@
+.past-months-view {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.budget-months-list {
+    width: 80%;
+}
+
+/* .budget-months-list .list-group-item.active {
+    background-color: #fff;
+    color: inherit;
+    border: 1px solid #ddd;
+} */

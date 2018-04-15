@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { monthParser } from '../../helpers/budgetMonthHelper';
-import { addBudgetItem } from '../../actions/index';
+import { setCurrentMonth, saveBudgetItem } from '../../actions/index';
 
 import {
     FormGroup,
@@ -14,7 +14,7 @@ import {
 
 import '../../stylesheets/components/BudgetMonth/BudgetItemView.css';
 
-class AddBudgetItemView extends Component {
+class EditBudgetItemView extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,6 +22,20 @@ class AddBudgetItemView extends Component {
             category: '',
             amount: 0
         }
+    }
+
+    async componentDidMount() {
+        await this.props.setCurrentMonth({
+            month: this.props.match.params.month,
+            year: this.props.match.params.year
+        });
+
+        let budgetItem = this.props.currentMonth.budgetItems[this.props.match.params.index];
+        this.setState({
+            name: budgetItem.name,
+            category: budgetItem.category,
+            amount: budgetItem.amount
+        });
     }
 
     changeName(e) {
@@ -56,7 +70,7 @@ class AddBudgetItemView extends Component {
         return categories;
     }
 
-    async addBudgetItemToMonth() {
+    async saveBudgetItemToMonth() {
         const budgetItem = {
             name: this.state.name,
             category: this.state.category,
@@ -64,8 +78,11 @@ class AddBudgetItemView extends Component {
         };
         const { month, year } = this.props.currentMonth;
 
-        await this.props.addBudgetItem({
-            month, year, budgetItem
+        await this.props.saveBudgetItem({
+            month, 
+            year, 
+            budgetItem,
+            index: this.props.match.params.index 
         });
         this.props.history.goBack();
     }
@@ -100,12 +117,12 @@ class AddBudgetItemView extends Component {
                 <Button
                     style={{ marginRight: '8px' }}
                     bsStyle='primary'
-                    onClick={this.addBudgetItemToMonth.bind(this)}>
-                    Add Budget Item
+                    onClick={this.saveBudgetItemToMonth.bind(this)}>
+                    Save Budget Item
                 </Button>
                 <Button
                     bsStyle='default'
-                    onClick={()=> {
+                    onClick={() => {
                         this.props.history.goBack();
                     }}>
                     Cancel
@@ -116,14 +133,16 @@ class AddBudgetItemView extends Component {
     }
 
     render() {
+        console.log('match is ', this.props.match);
         if(!this.props.currentMonth || !this.props.auth) {
             return <div>Loading...</div>
-        } else {
+        }
+        else {
             console.log('auth is ', this.props.auth);
             return (
                 <div className='budget-item-view'>
                     <div>
-                        Adding to: {monthParser(this.props.currentMonth.month)} {this.props.currentMonth.year}
+                        Editing Budget Item {parseInt(this.props.match.params.index) + 1} for {monthParser(this.props.currentMonth.month)} {this.props.currentMonth.year}
                     </div>
                     {this.renderForm()}
                 </div>
@@ -138,9 +157,10 @@ function mapStateToProps({ auth, currentMonth }) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ 
-        addBudgetItem: addBudgetItem
+        setCurrentMonth: setCurrentMonth,
+        saveBudgetItem: saveBudgetItem
     }, dispatch);
 }
 
-const AddBugetItemRouter = withRouter(AddBudgetItemView);
-export default connect(mapStateToProps, mapDispatchToProps)(AddBugetItemRouter);
+const EditBudgetItemRouter = withRouter(EditBudgetItemView);
+export default connect(mapStateToProps, mapDispatchToProps)(EditBudgetItemRouter);

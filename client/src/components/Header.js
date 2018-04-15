@@ -12,6 +12,8 @@ import {
 import {
     LinkContainer
 } from 'react-router-bootstrap';
+import { fetchCurrentMonth } from '../actions/index';
+import { bindActionCreators } from 'redux';
 
 import '../stylesheets/components/Header.css';
 
@@ -37,12 +39,14 @@ class Header extends Component {
                                 Home
                             </MenuItem>
                         </LinkContainer>
-                        <LinkContainer to='/'>
+                        {/* <LinkContainer 
+                            onClick={this.props.fetchCurrentMonth.bind(this)} 
+                            to='/add-item'>
                             <MenuItem>
                                 Add/Edit Budget Item
                             </MenuItem>
-                        </LinkContainer>
-                        <LinkContainer to='/dashboard'>
+                        </LinkContainer> */}
+                        <LinkContainer to='/past-months'>
                             <MenuItem>
                                 Past Months
                             </MenuItem>
@@ -87,4 +91,10 @@ function mapStateToProps({ auth }) {
     return { auth };
 }
 
-export default connect(mapStateToProps)(Header);
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+        fetchCurrentMonth: fetchCurrentMonth
+    }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
