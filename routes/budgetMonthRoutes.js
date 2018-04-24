@@ -9,6 +9,21 @@ module.exports = (app) => {
         res.send(budgetMonths);
     });
 
+    app.delete('/api/budget_months/budget_month', requireLogin, async (req, res) => {
+        var budgetMonth = await BudgetMonth.findOne({
+            _user: req.user.id,
+            month: req.query.month,
+            year: req.query.year
+        });
+
+        if(!budgetMonth) {
+            res.status(422).send('Budget month not found');
+        }
+        
+        await budgetMonth.remove();
+        res.send('successfully deleted');
+    });
+
     app.get('/api/budget_months/get_month', requireLogin, async(req, res) => {
         console.log('req query ', req.query);
         const budgetMonth = await BudgetMonth.findOne({

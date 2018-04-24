@@ -9,6 +9,7 @@ import AddBudgetItemView from './BudgetMonth/AddBudgetItemView';
 import EditBudgetItemView from './BudgetMonth/EditBudgetItemView';
 import PastMonths from './PastMonths';
 import SelectMonthView from './SelectMonthView';
+import Configuration from './Configuration';
 import '../stylesheets/main.css';
 import 'font-awesome/css/font-awesome.min.css';
 
@@ -30,6 +31,7 @@ class App extends Component {
                         <Route exact path='/edit-item/:month/:year/:index' component={EditBudgetItemView} />
                         <Route exact path='/month/:month/:year' component={SelectMonthView} />
                         <Route exact path='/past-months' component={PastMonths} />
+                        <Route exact path='/configuration' component={Configuration} />
                     </div>
                 </BrowserRouter>
             </div>

@@ -6,7 +6,8 @@ import {
     Button,
     ProgressBar,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    PageHeader
 } from 'react-bootstrap';
 import '../stylesheets/components/Dashboard.css';
 import BudgetMonthView from './BudgetMonth/BudgetMonthView';
@@ -23,18 +24,22 @@ class Dashboard extends Component {
         this.props.createBudgetMonth({
             month,
             year,
-            limit: this.props.auth.defaultBudget
+            limit: this.props.auth.defaultBudget,
+            budgetItems: this.props.auth.defaultBudgetItems
         });
     }
 
     renderContent() {
         if(!this.props.currentMonth) {
             return (
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                 <Button
                     bsStyle='primary'
+                    style={{ width: '500px' }}
                     onClick={this.createNewBudgetMonth.bind(this)} >
                     Start Tracking Budget For This Month
                 </Button>
+                </div>
             );
         }
         else {
@@ -48,8 +53,15 @@ class Dashboard extends Component {
     }
 
     render() {
+        if(!this.props.auth) {
+            return <div>Loading...</div>
+        }
+
         return (
             <div className='budget-tracker-dashboard'>
+                <div className='budget-tracker-header'>
+                    <h1>Dashboard for {this.props.auth.name}</h1>
+                </div>
                 {this.renderContent()}
             </div>
         );

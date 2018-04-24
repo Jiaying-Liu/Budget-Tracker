@@ -1,0 +1,31 @@
+.config-category-table table {
+    margin-bottom: 8px;
+}
+
+.config-budget-item-table table {
+    margin-bottom: 8px;
+}
+
+.config-category-table {
+    padding-bottom: 16px;
+}
+
+.config-budget-item-table {
+    padding-bottom: 16px;
+}
+
+.user-config-page-content .control-label {
+    padding-right: 8px;
+}
+
+.user-config-page-content .form-control {
+    margin-right: 8px;
+}
+
+.user-config-page-content button {
+    min-width: 80px;
+}
+
+.user-config-page-content input.form-control {
+    max-width: 160px;
+}

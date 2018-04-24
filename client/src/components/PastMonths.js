@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchBudgetMonths } from '../actions/index';
+import { fetchBudgetMonths, setCurrentMonth } from '../actions/index';
 import { monthParser } from '../helpers/budgetMonthHelper';
 import _ from 'lodash';
 
@@ -35,7 +35,9 @@ class PastMonths extends Component {
     renderListGroupItemsForYear(budgetMonths) {
         return budgetMonths.map(budgetMonth => {
             return (
-                <LinkContainer key={budgetMonth.month} to={`month/${budgetMonth.month}/${budgetMonth.year}`}>
+                <LinkContainer 
+                    key={budgetMonth.month}
+                    to={`month/${budgetMonth.month}/${budgetMonth.year}`}>
                     <ListGroupItem>
                         {monthParser(budgetMonth.month)}
                     </ListGroupItem>
@@ -101,6 +103,9 @@ class PastMonths extends Component {
     render() {
         return (
             <div className='past-months-view'>
+                <div className='budget-tracker-header'>
+                    <h1>Past Months</h1>
+                </div>
                 {this.renderContent()}
             </div>
         )
@@ -113,7 +118,8 @@ function mapStateToProps({budgetMonths}) {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        fetchBudgetMonths: fetchBudgetMonths
+        fetchBudgetMonths: fetchBudgetMonths,
+        setCurrentMonth
     }, dispatch);
 }
 

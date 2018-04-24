@@ -44,6 +44,19 @@ export const fetchBudgetMonths = () => async dispatch => {
     dispatch({ type: FETCH_BUDGET_MONTHS, payload: res.data });
 };
 
+export const deleteBudgetMonth = budgetMonth => async dispatch => {
+    const { month, year } = budgetMonth;
+
+    await axios.delete('/api/budget_months/budget_month', {
+        params: {
+            month, 
+            year
+        }
+    });
+
+    dispatch({ type: FETCH_CURRENT_MONTH, payload: null });
+}
+
 export const createBudgetMonth = values => async dispatch => {
     const res = await axios.post('/api/budget_months/create', values);
 
@@ -71,4 +84,14 @@ export const removeBudgetItem = values => async dispatch => {
 export const setBudgetItem = (name, category, amount) => dispatch => {
     const budgetItem = { name, category, amount };
     dispatch({ type: FETCH_BUDGET_ITEM, payload: budgetItem});
+}
+
+export const setBudgetLimit = values => async dispatch => {
+    const res = await axios.post('/api/budget_months/update_limit', values);
+    dispatch({ type: FETCH_CURRENT_MONTH, payload: res.data });    
+}
+
+export const setUserConfig = values => async dispatch => {
+    const res = await axios.post('/api/users/config', values);
+    dispatch({ type: FETCH_USER, payload: res.data });
 }

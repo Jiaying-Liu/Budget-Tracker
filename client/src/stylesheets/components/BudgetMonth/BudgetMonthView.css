@@ -16,3 +16,11 @@
     text-align: center;
     color: white;
 }
+
+.budget-month-view .budget-limit input {
+    margin: 0 8px;
+}
+
+.budget-limit {
+    padding-bottom: 8px;
+}

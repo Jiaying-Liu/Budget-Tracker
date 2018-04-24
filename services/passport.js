@@ -24,12 +24,20 @@ passport.use(
         proxy: true
     }, 
     async (accessToken, refreshToken, profile, done) => {
-        const existingUser = await User.findOne({ googleId: profile.id });
+        var existingUser = await User.findOne({ googleId: profile.id });
+        console.log('profile is ', profile);
         if(existingUser) {
-            return done(null, existingUser);
-        }
+            // refresh the name each time so that the app
+            // is refreshes everytime the display name is
+            // changed.
+            existingUser.name = profile.displayName;
+            existingUser = await existingUser.save();
+            done(null, existingUser);
+        } 
+        else {
         //new User({ googleId: profile.id });
-        const user = await new User({ googleId: profile.id }).save();
-        done(null, user);
+            const user = await new User({ googleId: profile.id, name: profile.displayName }).save();
+            done(null, user);
+        }
     })
 );

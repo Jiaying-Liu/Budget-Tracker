@@ -1,11 +1,13 @@
 .past-months-view {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     width: 100%;
 }
 
 .budget-months-list {
     width: 80%;
+    align-self: center
 }
 
 /* .budget-months-list .list-group-item.active {

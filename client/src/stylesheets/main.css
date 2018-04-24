@@ -1,0 +1,18 @@
+.budget-tracker-header {
+    text-align: center;
+}
+
+.budget-tracker-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.budget-tracker-page-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%
+}

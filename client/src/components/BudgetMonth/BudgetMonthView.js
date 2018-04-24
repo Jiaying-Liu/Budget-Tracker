@@ -4,15 +4,29 @@ import { withRouter } from 'react-router';
 import {
     ProgressBar,
     Button,
-    Table
+    Table,
+    Form,
+    FormControl,
+    FormGroup,
+    ControlLabel,
+    Modal
 } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { removeBudgetItem } from '../../actions/index';
+import { removeBudgetItem, setBudgetLimit, deleteBudgetMonth } from '../../actions/index';
 import { monthParser } from '../../helpers/budgetMonthHelper';
 import '../../stylesheets/components/BudgetMonth/BudgetMonthView.css';
 
 class BudgetMonthView extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentLimit: this.props.currentMonth.limit,
+            editCurrentLimit: false,
+            showDeleteConfirm: false
+        }
+    }
+
     static propTypes = {
         match: PropTypes.object.isRequired,
         location: PropTypes.object.isRequired,
@@ -122,14 +136,140 @@ class BudgetMonthView extends Component {
         )
     }
 
+    invalidLimit() {
+        return !this.state.currentLimit || parseFloat(this.state.currentLimit) <= 0;
+    }
+
+    saveLimit() {
+        const { month, year } = this.props.currentMonth;
+        this.props.setBudgetLimit({
+            month,
+            year,
+            limit: this.state.currentLimit
+        });
+        this.setState({
+            editCurrentLimit: false
+        });
+    }
+
+    renderCurrentLimit() {
+        if(this.state.editCurrentLimit) {
+            return (
+                <Form inline>
+                    <FormGroup>
+                        <ControlLabel>Budget ($)</ControlLabel>
+                        <FormControl
+                            type='number'
+                            value={this.state.currentLimit}
+                            onChange={(e) => {
+                                this.setState({
+                                    currentLimit: e.target.value
+                                });
+                            }} />
+                    </FormGroup>
+                        <Button
+                            disabled={this.invalidLimit()}
+                            style={{ marginRight: '8px' }}
+                            bsStyle='primary'
+                            onClick={this.saveLimit.bind(this)}>
+                            Save
+                        </Button>
+                        <Button
+                            bsStyle='default'
+                            onClick={() => {
+                                this.setState({
+                                    editCurrentLimit: false
+                                })
+                            }}>
+                            Cancel
+                        </Button>
+                </Form>
+            )
+        }
+        else {
+            return (
+                <div style={{ display: 'flex' }}>
+                <div>
+                    Budget: ${this.props.currentMonth.limit}
+                </div>
+                <i
+                    onClick={() => {
+                        this.setState({
+                            currentLimit: this.props.currentMonth.limit,
+                            editCurrentLimit: true
+                        })    
+                    }}
+                    style={{ paddingTop: '2px', paddingLeft: '8px' }}
+                    title='Edit' 
+                    className='fa fa-pencil budget-limit-edit' />
+                </div>
+            );
+        }
+    }
+
+    onDeleteClick() {
+        this.props.deleteBudgetMonth({
+            month: this.props.currentMonth.month,
+            year: this.props.currentMonth.year
+        });
+    }
+
+    renderDeleteModal() {
+        return (
+            <Modal 
+                show={this.state.showDeleteConfirm} 
+                onHide={() => { 
+                    this.setState({ 
+                        showDeleteConfirm: false 
+                    }) 
+                }} >
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Budget Month?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete this budget month?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        bsStyle='primary'
+                        onClick={this.onDeleteClick.bind(this)}>
+                        Delete
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.setState({
+                                showDeleteConfirm: false
+                            })
+                        }} >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
     render() {
         return (
             <div className='budget-month-view'>
-                <div>Month: {monthParser(this.props.currentMonth.month)} {this.props.currentMonth.year}</div>
-                <div>Budget: ${this.props.currentMonth.limit}</div>
+                <div>Month: {monthParser(this.props.currentMonth.month)} {this.props.currentMonth.year}
+                    <Button
+                        bsStyle='danger'
+                        onClick={() => {
+                            this.setState({
+                                showDeleteConfirm: true
+                            });
+                        }}
+                        style={{ right: '20%', position: 'absolute' }}>
+                        Delete
+                    </Button>
+                </div>
+                <div className='budget-limit'>
+                    {this.renderCurrentLimit()}
+                </div>
                 {this.renderProgressBar()}
                 {this.renderBudgetItemTable()}
                 {this.renderAddButton()}
+                {this.renderDeleteModal()}
             </div>
         )
     }
@@ -137,7 +277,9 @@ class BudgetMonthView extends Component {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ 
-        removeBudgetItem: removeBudgetItem
+        removeBudgetItem: removeBudgetItem,
+        setBudgetLimit: setBudgetLimit,
+        deleteBudgetMonth: deleteBudgetMonth
     }, dispatch);
 }
 

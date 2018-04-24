@@ -51,9 +51,9 @@ class Header extends Component {
                                 Past Months
                             </MenuItem>
                         </LinkContainer>
-                        <LinkContainer to='/dashboard'>
+                        <LinkContainer to='/configuration'>
                             <MenuItem>
-                                Configure
+                                Configuration
                             </MenuItem>
                         </LinkContainer>
                     </NavDropdown>
