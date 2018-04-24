@@ -1,6 +1,6 @@
 # Budget-Tracker
 
-This is Budget Tracker that I made using NodeJS and React-Redux.
+This is a Budget Tracker that I made using NodeJS and React-Redux.
 
 Users can sign in to the web application with their gmail accounts, keep track of their budgets for the current month and 
 view how well they managed their budget in past months. They can also configure their own personal settings such as their
