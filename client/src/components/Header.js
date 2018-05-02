@@ -78,6 +78,7 @@ class Header extends Component {
                             Budget Tracker
                         </Link>
                     </Navbar.Brand>
+                    <Navbar.Toggle />
                 </Navbar.Header>
                 <Navbar.Collapse>
                     {this.renderContent()}
