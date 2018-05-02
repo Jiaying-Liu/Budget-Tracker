@@ -27,7 +27,7 @@ class PastMonths extends Component {
     }
 
     getYears() {
-        let years = this.props.budgetMonths.map(budgetMonth => parseInt(budgetMonth.year));
+        let years = _.uniq(this.props.budgetMonths.map(budgetMonth => parseInt(budgetMonth.year)));
         years.sort((a, b) => b - a);
         return years;
     }
