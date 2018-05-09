@@ -27,7 +27,13 @@ class Header extends Component {
                     <Nav 
                         pullRight
                         style={{ paddingRight: '30px' }}>
-                    <NavItem href='/auth/google'>Login With Google</NavItem>
+                    <NavItem href='/auth/google'>
+                        <i
+                            title='Login'
+                            style={{ paddingRight: '6px' }} 
+                            className='fa fa-sign-in' />
+                        Login With Google
+                    </NavItem>
                     </Nav>
                 );
             default:
