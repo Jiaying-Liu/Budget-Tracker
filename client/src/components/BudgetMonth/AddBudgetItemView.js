@@ -99,6 +99,7 @@ class AddBudgetItemView extends Component {
                 <div className='budget-item-form-button-bar'>
                 <Button
                     style={{ marginRight: '8px' }}
+                    disabled={!this.state.name.replace(/\s/g, '') || !this.state.category || this.state.amount < 0}
                     bsStyle='primary'
                     onClick={this.addBudgetItemToMonth.bind(this)}>
                     Add Budget Item

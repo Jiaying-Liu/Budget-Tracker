@@ -23,7 +23,9 @@ class BudgetMonthView extends Component {
         this.state = {
             currentLimit: this.props.currentMonth.limit,
             editCurrentLimit: false,
-            showDeleteConfirm: false
+            showDeleteConfirm: false,
+            showDeleteBudgetItem: false,
+            deleteBudgetItemIndex: -1
         }
     }
 
@@ -58,12 +60,19 @@ class BudgetMonthView extends Component {
     }
 
     deleteIconClick(index) {
+        this.setState({
+            showDeleteBudgetItem: true,
+            deleteBudgetItemIndex: index
+        });
+    }
+
+    deleteBudgetItem() {
         this.props.removeBudgetItem({
             month: this.props.currentMonth.month,
             year: this.props.currentMonth.year,
-            indexToRemove: index
-        });
-    }
+            indexToRemove: this.state.deleteBudgetItemIndex
+        })
+    }  
 
     editIconClick(index) {
         const { month, year } = this.props.currentMonth;
@@ -214,6 +223,52 @@ class BudgetMonthView extends Component {
         });
     }
 
+    renderDeleteBudgetItemModal() {
+        if(this.state.deleteBudgetItemIndex < 0) {
+            return null;
+        }
+
+        return (
+            <Modal 
+                show={this.state.showDeleteBudgetItem} 
+                onHide={() => { 
+                    this.setState({ 
+                        showDeleteBudgetItem: false,
+                        deleteBudgetItemIndex: -1 
+                    }); 
+                }} >
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Budget Item: {this.props.currentMonth.budgetItems[this.state.deleteBudgetItemIndex].name}?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete this budget item?</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        bsStyle='primary'
+                        onClick={() => {
+                            this.deleteBudgetItem();
+                            this.setState({
+                                showDeleteBudgetItem: false,
+                                deleteBudgetItemIndex: -1
+                            })
+                        }}>
+                        Delete
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.setState({
+                                showDeleteBudgetItem: false,
+                                deleteBudgetItemIndex: -1
+                            })
+                        }} >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
     renderDeleteModal() {
         return (
             <Modal 
@@ -270,6 +325,7 @@ class BudgetMonthView extends Component {
                 {this.renderBudgetItemTable()}
                 {this.renderAddButton()}
                 {this.renderDeleteModal()}
+                {this.renderDeleteBudgetItemModal()}
             </div>
         )
     }

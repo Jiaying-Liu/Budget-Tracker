@@ -4,7 +4,6 @@ const BudgetMonth = mongoose.model('budgetMonths');
 
 module.exports = (app) => {
     app.get('/api/budget_months', requireLogin, async (req, res) => {
-        console.log('getting all months');
         const budgetMonths = await BudgetMonth.find({ _user: req.user.id });
         res.send(budgetMonths);
     });
@@ -25,7 +24,6 @@ module.exports = (app) => {
     });
 
     app.get('/api/budget_months/get_month', requireLogin, async(req, res) => {
-        console.log('req query ', req.query);
         const budgetMonth = await BudgetMonth.findOne({
             _user: req.user.id,
             month: req.query.month,
