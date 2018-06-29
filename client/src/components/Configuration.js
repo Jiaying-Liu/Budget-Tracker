@@ -321,7 +321,7 @@ class Configuration extends Component {
     }
 
     changeItemCategory(e, index) {
-        if(!index) {
+        if(index === undefined) {
             let newItem = this.state.newItem;
             newItem.category = e.target.value;
             this.setState({
@@ -337,7 +337,8 @@ class Configuration extends Component {
     }
 
     changeItemAmount(e, index) {
-        if(!index) {
+        console.log('index is ', index);
+        if(index === undefined) {
             let newItem = this.state.newItem;
             newItem.amount = e.target.value;
             this.setState({
