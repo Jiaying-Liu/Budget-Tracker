@@ -50,12 +50,15 @@ class BudgetMonthView extends Component {
         }
 
         return (
+            <div>
+                <div>Budget Left to Spend: {this.state.currentLimit - spentSoFar}</div>
             <ProgressBar
                 bsStyle='info'
                 now={spentSoFar}
                 max={this.props.currentMonth.limit}
                 label={`${percent}%`}
                 bsClass={progressBarClass} />
+            </div>
         )
     }
 
