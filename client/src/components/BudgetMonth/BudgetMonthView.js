@@ -50,7 +50,7 @@ class BudgetMonthView extends Component {
         }
 
         return (
-            <div className='progress'>
+            <div style={{ width: '100%' }}>
                 <div style={{ textAlign: 'center' }}>Budget Left to Spend: {this.state.currentLimit - spentSoFar}</div>
             <ProgressBar
                 bsStyle='info'
